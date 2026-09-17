@@ -1,0 +1,73 @@
+:root {
+  --ink: #18201d;
+  --muted: #738079;
+  --line: #dce4df;
+  --cream: #f7f8f3;
+  --green: #195c4c;
+  --mint: #e3f0e7;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.app-shell {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 28px 48px 24px;
+  color: var(--ink);
+}
+
+.topbar, .input-row, .section-heading, .rule, footer {
+  display: flex;
+  align-items: center;
+}
+
+.topbar { justify-content: space-between; }
+.brand { display: flex; align-items: center; gap: 9px; font-weight: 700; letter-spacing: -0.03em; }
+.brand-mark { display: grid; place-items: center; width: 25px; height: 25px; border-radius: 50%; color: white; background: var(--green); font-size: 21px; }
+.web-button { border: 1px solid var(--line); border-radius: 999px; padding: 9px 15px; background: white; color: var(--ink); font: inherit; font-size: 13px; cursor: pointer; }
+.web-button:hover { border-color: var(--green); color: var(--green); }
+
+.hero { padding: 82px 0 52px; text-align: center; }
+.eyebrow { color: var(--green); font-size: 11px; font-weight: 800; letter-spacing: .16em; }
+h1 { margin: 17px 0 15px; font-family: Georgia, serif; font-size: clamp(42px, 7vw, 70px); font-weight: 400; line-height: .98; letter-spacing: -.055em; }
+h1 em { color: var(--green); font-style: italic; }
+.subtitle { color: var(--muted); font-size: 15px; }
+
+.block-form { max-width: 780px; margin: 0 auto; padding: 22px; border: 1px solid var(--line); border-radius: 13px; background: white; box-shadow: 0 10px 35px #204b3510; }
+label { display: block; margin-bottom: 10px; font-size: 12px; font-weight: 700; }
+.input-row { gap: 9px; }
+.url-input { display: flex; flex: 1; align-items: center; min-width: 0; padding: 0 13px; border: 1px solid var(--line); border-radius: 7px; color: var(--muted); font-size: 13px; }
+input { width: 100%; padding: 12px 5px; border: 0; outline: 0; color: var(--ink); background: transparent; font: inherit; }
+select { padding: 12px 30px 12px 12px; border: 1px solid var(--line); border-radius: 7px; color: var(--ink); background: white; font: inherit; font-size: 13px; }
+.block-button { padding: 12px 19px; border: 0; border-radius: 7px; color: white; background: var(--green); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
+.block-button:hover { background: #124838; }
+.error { margin: 10px 0 0; color: #b44a42; font-size: 12px; }
+
+.rules-section { max-width: 780px; margin: 52px auto 0; }
+.section-heading { gap: 9px; border-bottom: 1px solid var(--line); padding-bottom: 12px; }
+h2 { margin: 0; font-size: 15px; }
+.count { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; color: var(--green); background: var(--mint); font-size: 12px; font-weight: 700; }
+.empty-state { padding: 48px 10px; text-align: center; color: var(--muted); }
+.empty-icon { display: block; margin-bottom: 8px; color: #a9c9b5; font-size: 24px; }
+.empty-state p { margin: 0 0 4px; color: var(--ink); font-size: 14px; font-weight: 700; }
+.empty-state small { font-size: 12px; }
+.rules-list { display: grid; gap: 9px; padding-top: 14px; }
+.rule { gap: 12px; padding: 13px 15px; border: 1px solid var(--line); border-radius: 9px; background: var(--cream); }
+.site-icon { display: grid; place-items: center; width: 31px; height: 31px; border-radius: 8px; color: var(--green); background: var(--mint); font-weight: 800; }
+.rule-info { display: grid; gap: 2px; flex: 1; }
+.rule-info strong { font-size: 13px; }
+.rule-info span { color: var(--muted); font-size: 11px; }
+.remove-button { border: 0; color: var(--muted); background: transparent; font-size: 22px; cursor: pointer; }
+.remove-button:hover { color: #b44a42; }
+footer { justify-content: center; gap: 7px; margin-top: 62px; color: var(--muted); font-size: 11px; }
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: #52a576; }
+
+@media (max-width: 640px) {
+  .app-shell { padding: 22px 18px; }
+  .hero { padding: 64px 0 38px; }
+  .input-row { align-items: stretch; flex-wrap: wrap; }
+  .url-input { flex-basis: 100%; }
+  select, .block-button { flex: 1; }
+}

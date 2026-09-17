@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "FocusBlock",
+  "version": "1.0.1",
+  "description": "Block distracting websites for a set amount of time.",
+  "action": {
+    "default_title": "FocusBlock",
+    "default_popup": "index.html"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "permissions": ["storage", "alarms", "declarativeNetRequest", "declarativeNetRequestWithHostAccess", "tabs"],
+  "host_permissions": ["<all_urls>"],
+  "web_accessible_resources": [
+    {
+      "resources": ["blocked.html"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
