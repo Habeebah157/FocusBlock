@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "FocusBlock",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Block distracting websites for a set amount of time.",
   "action": {
     "default_title": "FocusBlock",
@@ -16,7 +16,7 @@
     "service_worker": "background.js",
     "type": "module"
   },
-  "permissions": ["storage", "alarms", "declarativeNetRequest", "declarativeNetRequestWithHostAccess", "tabs"],
+  "permissions": ["storage", "alarms", "tabs", "webNavigation"],
   "host_permissions": ["<all_urls>"],
   "web_accessible_resources": [
     {

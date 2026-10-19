@@ -1,6 +1,12 @@
 const STORAGE_KEY = 'website-blocker-rules'
 const ALARM_NAME = 'focusblock-expiry'
 
+function getAllowedSites(state) {
+  if (Array.isArray(state)) return state
+  const folder = state?.folders?.find((candidate) => candidate.id === state.activeFolderId)
+  return folder?.rules || []
+}
+
 function matchesBlocker(url, blocker) {
   try {
     const hostname = new URL(url).hostname
@@ -10,27 +16,21 @@ function matchesBlocker(url, blocker) {
   }
 }
 
-async function syncRules(blockers) {
-  const activeBlockers = blockers.filter((blocker) => blocker.expiresAt > Date.now())
-  const rules = activeBlockers.map((blocker, index) => ({
-    id: index + 1,
-    priority: 1,
-    action: { type: 'block' },
-    condition: {
-      urlFilter: `||${blocker.hostname}^`,
-      resourceTypes: ['main_frame'],
-    },
-  }))
-
-  const existing = await chrome.declarativeNetRequest.getDynamicRules()
-  await chrome.declarativeNetRequest.updateDynamicRules({
-    removeRuleIds: existing.map((rule) => rule.id),
-    addRules: rules,
-  })
-  await chrome.storage.local.set({ [STORAGE_KEY]: activeBlockers })
+async function syncRules(state) {
+  if (!Array.isArray(state) && !state?.enabled) {
+    await chrome.alarms.clear(ALARM_NAME)
+    return
+  }
+  const allowedSites = getAllowedSites(state)
+  const activeAllowedSites = allowedSites.filter((site) => site.expiresAt > Date.now())
+  if (Array.isArray(state)) await chrome.storage.local.set({ [STORAGE_KEY]: activeAllowedSites })
   await chrome.alarms.clear(ALARM_NAME)
-  if (activeBlockers.length) {
-    chrome.alarms.create(ALARM_NAME, { when: Math.min(...activeBlockers.map((blocker) => blocker.expiresAt)) })
+  if (!Array.isArray(state) && allowedSites.length && !activeAllowedSites.length) {
+    await chrome.storage.local.set({ [STORAGE_KEY]: { ...state, enabled: false } })
+    return
+  }
+  if (activeAllowedSites.length) {
+    chrome.alarms.create(ALARM_NAME, { when: Math.min(...activeAllowedSites.map((site) => site.expiresAt)) })
   }
 }
 
@@ -43,25 +43,36 @@ function reportSyncError(error) {
   console.error('FocusBlock could not update blocking rules.', error)
 }
 
+function redirectIfBlocked(tabId, url, frameId = 0) {
+  if (frameId !== 0 || !url || url.startsWith(chrome.runtime.getURL('/'))) return
+  chrome.storage.local.get([STORAGE_KEY])
+    .then((result) => {
+      const state = result[STORAGE_KEY] || []
+      if (!state?.enabled) return
+      const activeAllowedSites = getAllowedSites(result[STORAGE_KEY] || [])
+        .filter((site) => site.expiresAt > Date.now())
+      const isAllowed = activeAllowedSites.some((site) => matchesBlocker(url, site))
+
+      if (!isAllowed) {
+        return chrome.tabs.update(tabId, {
+          url: `${chrome.runtime.getURL('blocked.html')}?site=${encodeURIComponent(new URL(url).hostname)}`,
+        })
+      }
+      return undefined
+    })
+    .catch(reportSyncError)
+}
+
 chrome.runtime.onInstalled.addListener(() => {
   loadAndSync().catch(reportSyncError)
+})
 
-  chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
-    if (!changeInfo.url) return
+chrome.webNavigation.onBeforeNavigate.addListener(({ tabId, frameId, url }) => {
+  redirectIfBlocked(tabId, url, frameId)
+})
 
-    chrome.storage.local.get([STORAGE_KEY])
-      .then((result) => {
-        const activeBlockers = (result[STORAGE_KEY] || [])
-          .filter((blocker) => blocker.expiresAt > Date.now())
-        const blocker = activeBlockers.find((candidate) => matchesBlocker(changeInfo.url, candidate))
-
-        if (blocker) {
-          return chrome.tabs.update(tabId, { url: chrome.runtime.getURL('blocked.html') })
-        }
-        return undefined
-      })
-      .catch(reportSyncError)
-  })
+chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
+  if (changeInfo.url) redirectIfBlocked(tabId, changeInfo.url)
 })
 chrome.runtime.onStartup.addListener(() => {
   loadAndSync().catch(reportSyncError)
@@ -69,7 +80,7 @@ chrome.runtime.onStartup.addListener(() => {
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (message.type !== 'SYNC_BLOCKERS') return false
 
-  syncRules(message.blockers)
+  syncRules(message.state || message.blockers)
     .then(() => sendResponse({ ok: true }))
     .catch((error) => {
       reportSyncError(error)

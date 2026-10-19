@@ -47,8 +47,25 @@ select { padding: 12px 30px 12px 12px; border: 1px solid var(--line); border-rad
 
 .rules-section { max-width: 780px; margin: 52px auto 0; }
 .section-heading { gap: 9px; border-bottom: 1px solid var(--line); padding-bottom: 12px; }
+.mood-heading { justify-content: space-between; }
+.heading-actions { display: flex; align-items: center; gap: 10px; }
+.section-label { margin: 0 0 4px; color: var(--green); font-size: 10px; font-weight: 800; letter-spacing: .14em; }
 h2 { margin: 0; font-size: 15px; }
 .count { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; color: var(--green); background: var(--mint); font-size: 12px; font-weight: 700; }
+.toggle-button { display: inline-flex; align-items: center; gap: 7px; padding: 8px 11px; border: 1px solid var(--green); border-radius: 999px; color: var(--green); background: white; font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
+.toggle-button.active { color: white; background: var(--green); }
+.mood-tabs { display: flex; align-items: center; gap: 7px; padding: 14px 0 2px; overflow-x: auto; }
+.mood-tab { display: inline-flex; align-items: center; gap: 2px; flex-shrink: 0; padding: 3px 5px 3px 10px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); background: white; font: inherit; font-size: 12px; }
+.mood-tab.active { border-color: var(--green); color: var(--green); background: var(--mint); }
+.mood-select { display: inline-flex; align-items: center; gap: 7px; padding: 5px 3px 5px 0; border: 0; color: inherit; background: transparent; font: inherit; font-size: inherit; cursor: pointer; }
+.mood-dot { width: 6px; height: 6px; border-radius: 50%; background: #b8c8be; }
+.mood-tab.active .mood-dot { background: var(--green); }
+.mood-tab small { opacity: .7; font-size: 10px; }
+.delete-mood { display: grid; place-items: center; width: 22px; height: 22px; padding: 0; border: 0; border-radius: 50%; color: var(--muted); background: transparent; font-size: 17px; line-height: 1; cursor: pointer; }
+.delete-mood:hover { color: #b44a42; background: #f7e9e6; }
+.new-mood { display: flex; flex-shrink: 0; align-items: center; border: 1px dashed #b9c9c0; border-radius: 999px; }
+.new-mood input { width: 92px; padding: 8px 4px 8px 11px; font-size: 12px; }
+.new-mood button { width: 29px; height: 29px; margin-right: 3px; border: 0; border-radius: 50%; color: var(--green); background: var(--mint); font-size: 18px; line-height: 1; cursor: pointer; }
 .empty-state { padding: 48px 10px; text-align: center; color: var(--muted); }
 .empty-icon { display: block; margin-bottom: 8px; color: #a9c9b5; font-size: 24px; }
 .empty-state p { margin: 0 0 4px; color: var(--ink); font-size: 14px; font-weight: 700; }
@@ -63,6 +80,7 @@ h2 { margin: 0; font-size: 15px; }
 .remove-button:hover { color: #b44a42; }
 footer { justify-content: center; gap: 7px; margin-top: 62px; color: var(--muted); font-size: 11px; }
 .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #52a576; }
+.status-dot.paused { background: #b9c2bd; }
 
 @media (max-width: 640px) {
   .app-shell { padding: 22px 18px; }
@@ -70,4 +88,6 @@ footer { justify-content: center; gap: 7px; margin-top: 62px; color: var(--muted
   .input-row { align-items: stretch; flex-wrap: wrap; }
   .url-input { flex-basis: 100%; }
   select, .block-button { flex: 1; }
+  .heading-actions { gap: 6px; }
+  .toggle-button { padding: 7px 8px; }
 }

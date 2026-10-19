@@ -6,9 +6,10 @@
     <title>FocusBlock</title>
     <style>
       body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #f7f8f3; color: #18201d; font-family: system-ui, sans-serif; text-align: center; }
-      main { max-width: 420px; padding: 30px; } .mark { color: #195c4c; font-size: 52px; } h1 { font: 400 42px Georgia, serif; margin: 10px 0; } p { color: #738079; }
+      main { max-width: 440px; padding: 30px; } .illustration { position: relative; width: 190px; height: 150px; margin: 0 auto 24px; } .sun { position: absolute; top: 0; right: 12px; width: 48px; height: 48px; border: 8px solid #e6b957; border-radius: 50%; } .hill { position: absolute; bottom: 8px; left: 0; width: 190px; height: 92px; border-radius: 100% 100% 18px 18px; background: #b7d6bd; transform: rotate(-5deg); } .hill::after { content: ""; position: absolute; right: 18px; bottom: -4px; width: 120px; height: 75px; border-radius: 100% 100% 12px 12px; background: #5f9c76; } .star { position: absolute; left: 22px; top: 26px; color: #195c4c; font-size: 31px; } h1 { font: 400 42px Georgia, serif; margin: 10px 0; } p { color: #738079; }
     </style>
   </head>
-  <body><main><div class="mark">✦</div><h1>Stay focused.</h1><p>This website is blocked for now. Your focus time is still running.</p></main>
+  <body><main><div class="illustration"><div class="sun"></div><div class="star">✦</div><div class="hill"></div></div><h1>Stay focused.</h1><p id="message">This website is blocked for now. Your focus time is still running.</p></main>
+    <script>const site = new URLSearchParams(location.search).get('site'); if (site) document.querySelector('#message').textContent = `${site} is blocked for now. Your focus time is still running.`</script>
   </body>
 </html>
